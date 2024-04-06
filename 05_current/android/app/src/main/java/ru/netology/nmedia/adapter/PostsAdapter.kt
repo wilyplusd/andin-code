@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.dto.Post
+import com.bumptech.glide.Glide
 
 interface OnInteractionListener {
     fun onLike(post: Post) {}
@@ -44,6 +45,14 @@ class PostViewHolder(
             // в адаптере
             like.isChecked = post.likedByMe
             like.text = "${post.likes}"
+
+            val url = "http://10.0.2.2:9999/avatars/${post.authorAvatar}"
+            Glide.with(binding.avatar)
+                .load(url)
+                .placeholder(R.drawable.ic_loading_100dp)
+                .error(R.drawable.ic_error_100dp)
+                .timeout(10_000)
+                .into(binding.avatar)
 
             menu.setOnClickListener {
                 PopupMenu(it.context, it).apply {
