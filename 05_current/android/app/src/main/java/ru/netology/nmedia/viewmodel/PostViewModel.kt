@@ -78,7 +78,27 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     fun likeById(id: Long) {
         repository.likeById(id, object : PostRepository.Callback<Post> {
             override fun onSuccess(post: Post) {
-                _postCreated.postValue(Unit)
+                _data.postValue(
+                    _data.value?.copy(posts = _data.value?.posts.orEmpty()
+                        .map { if (it.id == post.id) post else it }
+                    )
+                )
+            }
+
+            override fun onError(e: Exception) {
+                _errorOccurred.postValue(e.message)
+            }
+        })
+    }
+
+    fun dislikeById(id: Long) {
+        repository.dislikeById(id, object : PostRepository.Callback<Post> {
+            override fun onSuccess(post: Post) {
+                _data.postValue(
+                    _data.value?.copy(posts = _data.value?.posts.orEmpty()
+                        .map { if (it.id == post.id) post else it }
+                    )
+                )
             }
 
             override fun onError(e: Exception) {

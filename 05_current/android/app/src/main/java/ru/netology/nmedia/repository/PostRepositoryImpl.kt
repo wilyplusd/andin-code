@@ -76,6 +76,22 @@ class PostRepositoryImpl : PostRepository {
         })
     }
 
+    override fun dislikeById(id: Long, callback: PostRepository.Callback<Post>) {
+        PostsApi.retrofitService.dislikeById(id).enqueue(object : Callback<Post> {
+            override fun onResponse(call: Call<Post>, response: Response<Post>) {
+                if (!response.isSuccessful) {
+                    callback.onError(RuntimeException(response.message()))
+                    return
+                }
+                callback.onSuccess(response.body() ?: throw RuntimeException("Body is null"))
+            }
+
+            override fun onFailure(call: Call<Post>, t: Throwable) {
+                callback.onError(RuntimeException("Request failure"))
+            }
+        })
+    }
+
 }
 ////package ru.netology.nmedia.repository
 ////
