@@ -1,5 +1,6 @@
 package ru.netology.nmedia.activity
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -39,10 +40,25 @@ class NewPostFragment : Fragment() {
             viewModel.save()
             AndroidUtils.hideKeyboard(requireView())
         }
+
         viewModel.postCreated.observe(viewLifecycleOwner) {
             viewModel.loadPosts()
             findNavController().navigateUp()
         }
+
+        viewModel.errorOccurred.observe(viewLifecycleOwner) {
+            val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+            builder
+                .setTitle("Ошибка")
+                .setMessage(it)
+                .setPositiveButton("Ok") { dialog, _ ->
+                    dialog.dismiss()
+                }
+
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        }
+
         return binding.root
     }
 }
