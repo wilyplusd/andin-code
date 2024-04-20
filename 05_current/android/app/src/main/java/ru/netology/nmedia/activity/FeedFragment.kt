@@ -1,5 +1,6 @@
 package ru.netology.nmedia.activity
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -57,12 +58,27 @@ class FeedFragment : Fragment() {
                 startActivity(shareIntent)
             }
         })
+
         binding.list.adapter = adapter
         viewModel.data.observe(viewLifecycleOwner) { state ->
             adapter.submitList(state.posts)
             binding.progress.isVisible = state.loading
             binding.errorGroup.isVisible = state.error
             binding.emptyText.isVisible = state.empty
+        }
+
+        viewModel.errorOccurred.observe(viewLifecycleOwner) {
+            val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+            builder
+                .setTitle("Ошибка")
+                .setMessage(it)
+                .setPositiveButton("Ok") { dialog, _ ->
+                    dialog.dismiss()
+                    viewModel.loadPosts()
+                }
+
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
         }
 
         binding.retryButton.setOnClickListener {

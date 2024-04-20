@@ -30,7 +30,7 @@ class PostRepositoryImpl : PostRepository {
                 if (!response.isSuccessful) {
                     var errorMessage = response.message()
                     if (errorMessage.isNullOrEmpty()) {
-                        errorMessage = "Error saving post";
+                        errorMessage = "Error saving post"
                     }
                     callback.onError(RuntimeException(errorMessage))
                     return
@@ -64,7 +64,7 @@ class PostRepositoryImpl : PostRepository {
         PostsApi.retrofitService.likeById(id).enqueue(object : Callback<Post> {
             override fun onResponse(call: Call<Post>, response: Response<Post>) {
                 if (!response.isSuccessful) {
-                    callback.onError(RuntimeException(response.message()))
+                    callback.onError(RuntimeException("Like failed"))
                     return
                 }
                 callback.onSuccess(response.body() ?: throw RuntimeException("Body is null"))
@@ -80,7 +80,7 @@ class PostRepositoryImpl : PostRepository {
         PostsApi.retrofitService.dislikeById(id).enqueue(object : Callback<Post> {
             override fun onResponse(call: Call<Post>, response: Response<Post>) {
                 if (!response.isSuccessful) {
-                    callback.onError(RuntimeException(response.message()))
+                    callback.onError(RuntimeException("Dislike failed"))
                     return
                 }
                 callback.onSuccess(response.body() ?: throw RuntimeException("Body is null"))
