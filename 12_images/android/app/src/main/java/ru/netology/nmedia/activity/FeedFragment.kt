@@ -17,6 +17,7 @@ import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.viewmodel.PostViewModel
 
+
 class FeedFragment : Fragment() {
 
     private val viewModel: PostViewModel by activityViewModels()
@@ -51,6 +52,12 @@ class FeedFragment : Fragment() {
                 val shareIntent =
                     Intent.createChooser(intent, getString(R.string.chooser_share_post))
                 startActivity(shareIntent)
+            }
+
+            override fun onOpenAttachment(url: String) {
+                findNavController().navigate(
+                    FeedFragmentDirections.actionFeedFragmentToAttachmentFragment(url)
+                )
             }
         })
         binding.list.adapter = adapter
